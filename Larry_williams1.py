@@ -2,7 +2,7 @@
 # Larry Willams 변동성 돌파 시뮬레이션
 #
 # 보다 자세한 내용을 아래 tistory 참고
-# https://money-expert.tistory.com/33
+# https://money-expert.tistory.com/34
 #
 
 import json
