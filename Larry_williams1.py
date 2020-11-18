@@ -274,7 +274,7 @@ if __name__ == '__main__':
 
     # back data
     fname = '.\\sim_data\\BTC_day-2017-09-25-2020-11-12.csv'
-    ticker = 'KRW-STEEM'
+    ticker = 'KRW-BTC'
 
     # Larry William 변동성 돌파, 일봉 사용
     tr_logic = TR_LW('day', 1)
