@@ -7,9 +7,9 @@
 
 1. upbit 거래소 암호화폐 월봉 가져오는 파이썬 프로그램 : get_upbit_day_candles.py 
 
-2. Larry Williams 변동성 돌파 전략 시뮬레이션
+2. Larry Williams 변동성 돌파 전략 시뮬레이션 
 
-   2.1 막 만들어보기
+   2.1 막 만들어보기 : Larry_williams1.py
    
    2.2 코드 정리
    
