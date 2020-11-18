@@ -197,9 +197,9 @@ def simulation(ticker, sim_file, tr_login) :
 
             # 1. 매수 금액 결정, min(balance, deposit) 초기 deposit 금액 혹은 balance가 초기 deposit 이하이면 balance
             buying_amount = min(balance, deposit)
-
-            # 2. 일봉 종가에 판다고 가정
             num_buying = buying_amount / buy_price    # 매수 주수
+            
+            # 2. 일봉 종가에 판다고 가정
             profit = (candle.close - buy_price) * num_buying
             balance += profit
 
