@@ -11,8 +11,10 @@
 
    2.1 막 만들어보기 : Larry_williams1.py
    
-   2.2 코드 정리
+   2.2 코드 정리 : Larry_williams1.py
    
-   2.3 성능 개선
+   2.3 chart그리고(text 추가) : Larry_williams1.py
+
+   2.4 성능 개선
    
    
