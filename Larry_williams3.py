@@ -3,7 +3,7 @@
 #
 # 보다 자세한 내용을 아래 tistory 참고
 # https://money-expert.tistory.com/36
-#
+# https://money-expert.tistory.com/37
 
 import json
 import csv
@@ -52,7 +52,9 @@ def save_mid_values(candle_data, buy_price, sell_price, profit, total_profit, dd
     candle_data['profit'] = profit # profit 저장
     candle_data['total_profit'] = total_profit # total_profit 저장
     candle_data['dd'] = dd # downd draw 저장
-
+    candle_data['trend'] = trend # 추세값 저장
+    candle_data['ma7'] = ma7 # downd draw 저장
+    
 def handle_fee(balance, stat, num_buying, price,  trading_fee) :
     fee = num_buying * price * trading_fee
     stat.total_fee += fee
@@ -159,7 +161,7 @@ def simulation(ticker, sim_file, tr_login) :
         return
 
     # simulation 중 파일에 저장할 변수들 추가
-    save_mid_values(candle_data[-1], 0, 0, 0, 0, 0)
+    save_mid_values(candle_data[-1], 0, 0, 0, 0, 0, 0, 0)
 
     # 제일 마지막 일봉이 어제 candle
     yest = candle_data[len(candle_data)-1]
@@ -186,7 +188,9 @@ def simulation(ticker, sim_file, tr_login) :
         candle.new_candle(candle_data[i])
                         
         # simulation 중 파일에 저장할 변수들 추가
-        save_mid_values(candle_data[i], 0, 0, 0, 0, 0)
+        trend = tr_logic.get_trend()
+        ma7 = tr_logic.get_MA(7)
+        save_mid_values(candle_data[i], 0, 0, 0, 0, 0, trend, ma7)
 
         buy_price = tr_logic.is_enter_condition(candle) 
         if buy_price > 0 : # 매수조건임
@@ -201,7 +205,7 @@ def simulation(ticker, sim_file, tr_login) :
             stat.num_trading += 1  # 매수한 주문 수
             
             # 5. adding log
-            save_mid_values(candle_data[i], buy_price, candle_data[i]['sell_price'], 0, stat.total_profit, 0)
+            save_mid_values(candle_data[i], buy_price, candle_data[i]['sell_price'], 0, stat.total_profit, 0, candle_data[i]['trend'], candle_data[i]['ma7'])
 
             # 매수 중이라고 설정
             bought = 1
@@ -220,7 +224,7 @@ def simulation(ticker, sim_file, tr_login) :
                 dd = stat.update_stat(profit)
                 
                 # 5. adding log
-                save_mid_values(candle_data[i], candle_data[i]['buy_price'], sell_price, profit, stat.total_profit, dd)
+                save_mid_values(candle_data[i], candle_data[i]['buy_price'], sell_price, profit, stat.total_profit, dd, candle_data[i]['trend'], candle_data[i]['ma7'])
 
                 # 매도 완료
                 bought = 0
