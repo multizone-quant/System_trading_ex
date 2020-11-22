@@ -13,7 +13,7 @@
    
    2.2 코드 정리 : Larry_williams1.py
    
-   2.3 chart그리고(text 추가) : Larry_williams1.py
+   2.3 chart그리(text 추가) : Larry_williams1.py
 
    2.4 성능 개선
    
