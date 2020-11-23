@@ -90,7 +90,7 @@ class sim_stat :
             self.max_gain = self.total_profit
                     
         # draw down 계산
-        dd = 100.0 * (self.max_gain - self.total_profit) / self.max_gain
+        dd = 100.0 * (self.max_gain - self.total_profit) / (self.init_seed + self.max_gain)
         if dd > self.mdd :
             self.mdd = dd  # mdd 계산
         return dd
