@@ -11,10 +11,12 @@
 
    2.1 막 만들어보기 : Larry_williams1.py
    
-   2.2 코드 정리 : Larry_williams1.py
+   2.2 코드 정리 : Larry_williams2.py
    
-   2.3 chart그리(text 추가) : Larry_williams1.py
+   2.3 chart그리(text 추가) : Larry_williams3.py, TR_LW.py 
 
-   2.4 성능 개선
+   2.4 성능 개선 : Larry_williams3.py, TR_LW.py 
+   
+   2.5 전략class refactoring : Larry_williams4.py, TR_LW_1.py 
    
    
