@@ -226,7 +226,7 @@ def    merge_excel_file(code) :
             if key1 == -1 :
                 title = data[0].copy()
                 for i   in range(len(data[0])) :
-                    if data[0][i] == 'timestamp' :
+                    if data[0][i] == 'candleDateTimeKst' :
                         key1 = i
 
             first_tm = data[1][key1]  # key1 = timestamp
