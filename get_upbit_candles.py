@@ -7,7 +7,7 @@
 # 보다 자세한 내용을 아래 tistory 참고
 # https://money-expert.tistory.com/46
 #
-# 2021/1/12 오후 3시 이후로 to 값을 변경하면서 과거 데이터를 모두 가져오는 기능이 동작하지 않습니다. 참고하세요.
+# 2021/1/12 오후 3시 이후로 to 값을 변경하면서 과거 데이터를 모두 가져오는 기능이 동작하지 않은 버그 수정 : utc를 이용하고 
 
 import requests
 import json
@@ -149,6 +149,8 @@ def get_data_continue_candle(coin, ty='day', interval=1, count=10, frm=None, to=
                     end = True
             
             # 계속 검색을 하는 경우에는 현재 받은 candle의 마지막 시간이 next_to가 된다.
+            # 이때 시간은  UTC
+            dt = info['candleDateTime'].split('+')
             next_to = tm                    
 
             # cnt 번호를 추가하여 파일이름 생성
