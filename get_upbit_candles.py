@@ -7,6 +7,7 @@
 # 보다 자세한 내용을 아래 tistory 참고
 # https://money-expert.tistory.com/46
 #
+# 2021/1/12 오후 3시 이후로 to 값을 변경하면서 과거 데이터를 모두 가져오는 기능이 동작하지 않습니다. 참고하세요.
 
 import requests
 import json
