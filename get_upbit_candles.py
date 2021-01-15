@@ -127,7 +127,7 @@ def get_data_continue_candle(coin, ty='day', interval=1, count=10, frm=None, to=
         t = int(time.time())
         ret = get_candle_history(coin, ty, interval, count, next_to)
 
-        if ret != None :
+        if len(ret) > 0 :
             if len(ret) < 2 : # no more data
                 return
 
