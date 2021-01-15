@@ -1,19 +1,9 @@
-# date : 2021/01/12
-# upbit 거래소 암호화폐 분/일봉 자료 얻기
-#
-# 실행결과
-#   out_coin-name_min_1.csv
-#
-# 보다 자세한 내용을 아래 tistory 참고
-# https://money-expert.tistory.com/46
-#
-# 2021/1/12 오후 3시 이후로 to 값을 변경하면서 과거 데이터를 모두 가져오는 기능이 동작하지 않은 버그 수정 : utc를 이용하 
 
 import requests
 import json
 import time
 import os 
-
+from datetime import datetime, timedelta
 def save_list_to_file_csv(file_name, titles, data) :
     with open(file_name,'w',encoding="cp949") as make_file: 
         ss = ''
@@ -122,12 +112,29 @@ def remove_data(data, frm, key) :
 def get_data_continue_candle(coin, ty='day', interval=1, count=10, frm=None, to=None) :  
     end = False
     cnt = 1
+    if frm != None :
+        # 입력은 '2021-01-12 12:00:00'
+        # 내부format 형태로 변경 2021-01-12T11:50:00+09:00
+        frm = frm.replace(' ', 'T')
+        frm += '+09:00'
+
+    if to != None :
+        # utc로 변경해야
+
+        # datetime 값으로 변환
+        dt_tm_kst = datetime.strptime(to,'%Y-%m-%d %H:%M:%S')
+        tm_utc = dt_tm_kst - timedelta(hours=9)            
+
+        # 일자 + 시간 문자열로 변환
+        to = tm_utc.strftime('%Y-%m-%d %H:%M:%S')
+
     next_to = to
     while(end == False) :
         t = int(time.time())
         ret = get_candle_history(coin, ty, interval, count, next_to)
 
         if len(ret) > 0 :
+            print(ret[0]['candleDateTimeKst'], ret[-1]['candleDateTimeKst'])
             if len(ret) < 2 : # no more data
                 return
 
@@ -151,23 +158,21 @@ def get_data_continue_candle(coin, ty='day', interval=1, count=10, frm=None, to=
             # 계속 검색을 하는 경우에는 현재 받은 candle의 마지막 시간이 next_to가 된다.
             # 이때 시간은  UTC
             dt = info['candleDateTime'].split('+')
+            tm = dt[0].replace('T', ' ')
             next_to = tm                    
 
             # cnt 번호를 추가하여 파일이름 생성
             fname = coin+'_' + ty + '_' + str(interval) + '_' + format(cnt, '03d') + '_' + day + '.csv'
             cnt += 1
             save_to_file_csv(fname, ret)
-            print ('save ', fname)
-
+            print ('save ', fname, tm_kst)
 
             if ty == 'day' : # day는 400개만 받을 수 있다.ㅣ
                 end = True
             else :  # 분 봉은 계속 받을 수 있다.
                 time.sleep(1)
-
         else :
             end = True
-
 
 #
 # for read data from cvs
@@ -208,9 +213,9 @@ def read_csv(fname) :
 
 
 import glob
-def    merge_excel_file(code) :
+def    merge_excel_file(fname) :
     files = []
-    filter = '.\\' + code + '*.csv'
+    filter = '.\\' + fname + '*.csv'
     for filename in glob.glob(filter): 
         files.append(filename)
 
@@ -226,7 +231,7 @@ def    merge_excel_file(code) :
             if key1 == -1 :
                 title = data[0].copy()
                 for i   in range(len(data[0])) :
-                    if data[0][i] == 'candleDateTimeKst' :
+                    if data[0][i] == 'candleDateTimeKst' :  # timestamp에 None이 들어오는 경우가 있음
                         key1 = i
 
             first_tm = data[1][key1]  # key1 = timestamp
@@ -249,23 +254,26 @@ def    merge_excel_file(code) :
 
     # 오름차순으로 정
     merged_data = sorted(all, key = lambda x: (x[key1]), reverse=False)  # key1 번째가 key 
-    out_name = '.\\out_' + code + '.csv'
+
+    dt = merged_data[0][key1].split('T')
+    
+    out_name = '.\\out_' + fname + '_' + dt[0] + '.csv'
     save_list_to_file_csv(out_name, title, merged_data)
     print('merge finished', out_name)
 
 
 # upbit 과거 데이터 받기
 CANDLE_TYPE     = 'min' # 'min' or 'day'
-CANDLE_INTERVAL = 1     # 3,5,10,30,60
+CANDLE_INTERVAL = 60     # 1, 3,5,10,30,60
 
-COIN            = 'KRW-HUNT'                    # 원하는 코인 정보
-FROM            = '2021-01-11T20:00:00+09:00'   # 특정 일자부터 받고 싶을 때 format : candle : '2021-01-12T10:00:00+09:00'
-TO              = None                          # to는 None 까지만 test함
+COIN            = 'KRW-BTC'               # 원하는 코인 정보
+
+# 1/14일 하루치를 받고 싶을 때 
+FROM            = '2021-01-14 00:00:00'   # 특정 일자부터 받고 싶을 때 format : candle : '2021-01-12 10:00:00' KST 
+TO              = '2021-01-15 00:00:00'   # None(최근일자) or TO (KST 기준)
 
 
 if __name__ == '__main__':
-
-    # upbit tick max 500
     print('get candle ', COIN, CANDLE_TYPE, CANDLE_INTERVAL)
     get_data_continue_candle(COIN, ty=CANDLE_TYPE, interval = CANDLE_INTERVAL, count=400, frm=FROM, to=TO)  
     
